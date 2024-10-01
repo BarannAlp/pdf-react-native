@@ -5,7 +5,7 @@ export const registerUser = async (user) => {
   try {
     console.log(user);
     const response = await axios.post(
-      "http://localhost:8000/api/users/register",
+      "http://pdf-node-seven.vercel.app/api/users/register",
       user,
       {
         headers: {
@@ -34,7 +34,7 @@ export const registerUser = async (user) => {
 };
 export const loginUser = async (user) => {
   const response = await axios.post(
-    "http://localhost:8000/api/users/login",
+    "http://pdf-node-seven.vercel.app/api/users/login",
     user,
     {
       headers: {
@@ -43,4 +43,21 @@ export const loginUser = async (user) => {
     }
   );
   return response.data;
+};
+
+
+export const fetchPDF = async (filename) => {
+  try {
+      // Make a GET request to fetch the PDF file
+      const response = await axios.get(`http://pdf-node-seven.vercel.app/api/pdfDetails/files/${filename}`, {
+          responseType: 'blob', // Important: Set the response type to 'blob'
+      });
+
+      return response.data;
+     
+
+  } catch (error) {
+      console.error("Error fetching PDF: ", error);
+      Alert.alert("Error", "Could not fetch the PDF.");
+  }
 };
