@@ -53,6 +53,20 @@ export const fetchPDF = async (filename) => {
           responseType: 'blob', // Important: Set the response type to 'blob'
       });
 
+      return response;
+     
+
+  } catch (error) {
+      console.error("Error fetching PDF: ", error);
+      Alert.alert("Error", "Could not fetch the PDF.");
+  }
+};
+
+export const fetchItemsByHeading = async (heading) => {
+  try {
+      const response = await axios.get(`http://pdf-node-seven.vercel.app/api/pdfDetails/getFilesByHeading/${heading}`, {
+      });
+
       return response.data;
      
 
@@ -61,3 +75,18 @@ export const fetchPDF = async (filename) => {
       Alert.alert("Error", "Could not fetch the PDF.");
   }
 };
+
+export const fetchItems= async () => {
+  try {
+      const response = await axios.get(`http://pdf-node-seven.vercel.app/api/pdfDetails/getFiles`, {
+      });
+
+      return response.data;
+     
+
+  } catch (error) {
+      console.error("Error fetching PDF: ", error);
+      Alert.alert("Error", "Could not fetch the PDF.");
+  }
+};
+

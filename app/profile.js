@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "expo-router";
 import { logoutAction } from "./(redux)/authSlice";
 import ProtectedRoute from "../components/ProtectedRoute";
+import { WebView } from 'react-native-webview';
 
-export default function Profile() {
+export default function Bildirimler() {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -17,21 +18,12 @@ export default function Profile() {
   };
 
   return (
-    <ProtectedRoute>
       <View style={styles.container}>
-        <Text style={styles.title}>User Profile</Text>
-        {user ? (
-          <>
-            <Text style={styles.text}>Email: {user.email}</Text>
-            <TouchableOpacity style={styles.button} onPress={handleLogout}>
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <Text style={styles.text}>No user logged in</Text>
-        )}
+      <WebView
+      source={{ uri: 'https://eflow.csglobal.com.tr/Upload/WebAPI/BildirimFormuYurtcim.html' }}
+      style={{ flex: 1 }}
+    />
       </View>
-    </ProtectedRoute>
   );
 }
 

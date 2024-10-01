@@ -1,36 +1,26 @@
 import { Tabs } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+
 export default function RootLayout() {
   return (
     <Tabs>
       <Tabs.Screen
         name="index"
         options={{
-          headerShown: false,
-
-          title: "Home",
+          headerShown: false, // Make sure the header is hidden
+          title: "Dökümanlar",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
-        }}
-      />
-      {/* profile */}
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="user" color={color} />
+            <FontAwesome size={28} name="file" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="bildirimler"
         options={{
-          title: "Settings",
+          headerShown: false, // Make sure the header is hidden
+          title: "Bildirimler",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cog" color={color} />
+            <FontAwesome size={28} name="list-ul" color={color} />
           ),
         }}
       />

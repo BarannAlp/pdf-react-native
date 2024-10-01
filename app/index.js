@@ -1,45 +1,97 @@
-import * as React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Video, ResizeMode } from "expo-av";
+import React, { useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import { useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
+import { loginUser } from "./(services)/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "./(redux)/authSlice";
 
-export default function App() {
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Required"),
+  password: Yup.string().min(6, "Too Short!").required("Required"),
+});
+
+export default function Login() {
   const router = useRouter();
-
+  //dispatch
+  const dispatch = useDispatch();
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    mutationKey: ["login"],
+  });
+  // console.log(mutation);
+  const user = useSelector((state) => state.auth.user);
+  useEffect(() => {
+    if (user) {
+      router.push("/(tabs)");
+    }
+  }, []);
+  console.log("user", user);
   return (
     <View style={styles.container}>
-      <Video
-        ref={video}
-        style={styles.video}
-        source={{
-          uri: "https://videos.pexels.com/video-files/5377700/5377700-sd_540_960_25fps.mp4",
+      <Text style={styles.title}>Login</Text>
+      <Formik
+        initialValues={{ email: "atom@gmail.com", password: "123456" }}
+        validationSchema={LoginSchema}
+        onSubmit={(values) => {
+          console.log(values);
+          mutation
+            .mutateAsync(values)
+            .then((data) => {
+              console.log("data", data);
+              dispatch(loginAction(data));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          router.push("/(tabs)");
         }}
-        resizeMode={ResizeMode.COVER}
-        shouldPlay
-        isLooping
-        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-      />
-      <View style={styles.overlay}>
-        <Text style={styles.mainText}>Masynctech</Text>
-        <Text style={styles.subText}>Coding School</Text>
-        <Text style={styles.tagline}>Build Apps, Build Futures</Text>
-      </View>
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/auth/login")}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/auth/register")}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-      </View>
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <View style={styles.form}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+              keyboardType="email-address"
+            />
+            {errors.email && touched.email ? (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            ) : null}
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+              secureTextEntry
+            />
+            {errors.password && touched.password ? (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            ) : null}
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
     </View>
   );
 }
@@ -48,53 +100,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-  },
-  video: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 16,
+    backgroundColor: "#f5f5f5",
   },
-  mainText: {
-    color: "white",
-    fontSize: 68,
+  title: {
+    fontSize: 32,
     fontWeight: "bold",
-    textAlign: "center",
+    marginBottom: 24,
   },
-  subText: {
-    color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
+  form: {
+    width: "100%",
   },
-  tagline: {
-    color: "white",
-    fontSize: 18,
-    fontStyle: "italic",
-    textAlign: "center",
-    marginTop: 10,
+  input: {
+    height: 50,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    backgroundColor: "#fff",
   },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 30,
-    left: 0,
-    right: 0,
+  errorText: {
+    color: "red",
+    marginBottom: 16,
   },
   button: {
+    height: 50,
     backgroundColor: "#6200ea",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    elevation: 3, // Adds a shadow effect on Android
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    marginTop: 16,
   },
   buttonText: {
-    color: "white",
+    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },
