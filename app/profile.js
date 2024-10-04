@@ -3,19 +3,12 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useRouter } from "expo-router";
-import { logoutAction } from "./(redux)/authSlice";
+
 import ProtectedRoute from "../components/ProtectedRoute";
 import { WebView } from 'react-native-webview';
 
 export default function Bildirimler() {
-  const router = useRouter();
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-
-  const handleLogout = () => {
-    dispatch(logoutAction());
-    router.push("/");
-  };
 
   return (
       <View style={styles.container}>

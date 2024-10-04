@@ -3,7 +3,7 @@ import { View, StyleSheet} from "react-native";
 import { useRouter } from "expo-router";
 import { WebView } from 'react-native-webview';
 
-export default function Profile() {
+export default function Bildirimler() {
   const router = useRouter();
 
 

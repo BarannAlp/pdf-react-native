@@ -27,19 +27,19 @@ export default function Login() {
     mutationFn: loginUser,
     mutationKey: ["login"],
   });
-  // console.log(mutation);
+  
   const user = useSelector((state) => state.auth.user);
   useEffect(() => {
     if (user) {
       router.push("/(tabs)");
     }
-  }, []);
-  console.log("user", user);
+  }, [user]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Giriş</Text>
       <Formik
-        initialValues={{ email: "atom@gmail.com", password: "123456" }}
+        initialValues={{ email: "kullanici@yurtcim.com", password: "yurtcim" }}
         validationSchema={LoginSchema}
         onSubmit={(values) => {
           console.log(values);
@@ -47,12 +47,14 @@ export default function Login() {
             .mutateAsync(values)
             .then((data) => {
               console.log("data", data);
+              if(data.message=="Login success"){
+                router.push("(tabs)")
+              }
               dispatch(loginAction(data));
             })
             .catch((err) => {
               console.log(err);
             });
-          router.push("/(tabs)");
         }}
       >
         {({
@@ -87,7 +89,7 @@ export default function Login() {
               <Text style={styles.errorText}>{errors.password}</Text>
             ) : null}
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Giriş</Text>
             </TouchableOpacity>
           </View>
         )}

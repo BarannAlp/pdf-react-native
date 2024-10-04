@@ -3,7 +3,6 @@ import axios from "axios";
 
 export const registerUser = async (user) => {
   try {
-    console.log(user);
     const response = await axios.post(
       "http://pdf-node-seven.vercel.app/api/users/register",
       user,
@@ -33,16 +32,25 @@ export const registerUser = async (user) => {
   }
 };
 export const loginUser = async (user) => {
-  const response = await axios.post(
-    "http://pdf-node-seven.vercel.app/api/users/login",
-    user,
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const response = await axios.post(
+      "https://pdf-node-seven.vercel.app/api/users/login",
+      {
+        email: user.email,    // Properly structure the request body
+        password: user.password
       },
-    }
-  );
-  return response.data;
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response)
+    return response.data; // Return the data from the response
+  } catch (error) {
+    console.error("Login failed: ", error); // Log any errors that occur
+    throw new Error("Login failed"); // Optionally throw an error
+  }
 };
 
 

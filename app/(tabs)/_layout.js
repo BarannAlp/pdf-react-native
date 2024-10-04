@@ -8,7 +8,7 @@ export default function RootLayout() {
         name="index"
         options={{
           headerShown: false, // Make sure the header is hidden
-          title: "Dökümanlar",
+          title: "Talimatlar",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="file" color={color} />
           ),

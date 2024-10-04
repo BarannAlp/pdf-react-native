@@ -1,8 +1,15 @@
 export const accordionData = [
     {
+        title: "Elektrik Bakım",
+        nested: []
+    },
+    {
+        title: "Enerji",
+        nested: []
+    },
+    {
         title: "İSG",
-        items: [ 
-        ],
+        items: [],
         nested: [
             {
                 title: "Risk Değerlendirme",
@@ -11,7 +18,6 @@ export const accordionData = [
             {
                 title: "Acil Durum Eylem Planı",
                 nested: []
-
             }
         ]
     },
@@ -20,19 +26,11 @@ export const accordionData = [
         nested: []
     },
     {
-        title: "Yarı Mamül",
-        nested: []
-    },
-    {
-        title: "Mamül",
-        nested: []
-    },
-    {
         title: "Makina Bakım",
         nested: []
     },
     {
-        title: "Elektrik Bakım",
+        title: "Mamül",
         nested: []
     },
     {
@@ -44,7 +42,7 @@ export const accordionData = [
         nested: []
     },
     {
-        title: "Enerji",
+        title: "Yarı Mamül",
         nested: []
     }
 ];

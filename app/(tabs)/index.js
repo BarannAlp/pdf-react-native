@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, Button,TouchableOpacity, StyleSheet,ScrollView } from 'react-native';
+import { View, Text, Button,TouchableOpacity, StyleSheet,ScrollView,TextInput } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { fetchItemsByHeading,fetchItems } from '../(services)/api/api';
 import { useRouter } from "expo-router";
@@ -39,7 +39,7 @@ const handleTextClick = async (pdf) => {
     return (
         <View>
             {nestedData.map((item, index) => (
-                <AccordionItem key={index} title={item.title}>
+                <AccordionItem key={index} title={item.title} >
                     {item.nested.length !=0 ? (
                         <NestedAccordion nestedData={item.nested} />
                     ) : (
@@ -47,7 +47,7 @@ const handleTextClick = async (pdf) => {
                     {itemsData
                     .filter((pdfItem) => pdfItem.heading == item.title) // Filter items based on the heading
                     .map((pdfItem, index) => (
-                        <TouchableOpacity key={index} onPress={() => handleTextClick(pdfItem.pdf)}>
+                        <TouchableOpacity  key={index} onPress={() => handleTextClick(pdfItem.pdfUrl)}>
                         <Text style={styles.clickableText}>{pdfItem.title}</Text>
                         </TouchableOpacity>
                     ))}
@@ -63,9 +63,9 @@ const handleTextClick = async (pdf) => {
 const Accordion = () => {
     const router = useRouter();
 
-    const handleTextClick = async (pdf) => {
+    const handleTextClick = async (pdfUrl) => {
         // Use template literals for cleaner URL creation
-        router.push(`/pdfFileView?pdf=${pdf}`);
+        router.push(`/pdfFileView?pdfUrl=${pdfUrl}`);
     };
     
     const [itemsData, setItemsData] = useState([]);
@@ -85,32 +85,58 @@ const Accordion = () => {
             fetchData();
         }, []); // Empty dependency array means this will run once when the component mounts
         
-        
+        const [searchQuery, setSearchQuery] = useState(''); // State to store search input
+
+        // Filter itemsData based on search query
+        const filteredItems = itemsData.filter((pdfItem) =>
+          pdfItem.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      
 
     return (
+        <>
+        {/* Search Bar */}
+      
+        
         <ScrollView style={styles.container}>
-            <Text style={styles.title}>Yurt Çimento</Text>
-            <Text style={styles.subtitle}>Bilgilendirme Dökümanları</Text>
+          <Text style={styles.title}>Yurt Çimento</Text>
+          <Text style={styles.subtitle}>Talimatlar</Text>
+          <TextInput
+          style={styles.searchInput}
+          placeholder="Talimat ara..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
 
-            {accordionData.map((item, index) => (
-                <AccordionItem key={index} title={item.title}>
-                    {item.nested.length !=0 ? (
-                        <NestedAccordion nestedData={item.nested} itemsData={itemsData} />
-                    ) : (
-                        <>
-                        {itemsData
-                          .filter((pdfItem) => pdfItem.heading == item.title) // Filter items based on the heading
-                          .map((pdfItem, index) => (
-                            <TouchableOpacity key={index} onPress={() => handleTextClick(pdfItem.pdf)}>
-                              <Text style={styles.clickableText}>{pdfItem.title}</Text>
-                            </TouchableOpacity>
-                          ))}
-                      </>
-                    )}
-                </AccordionItem>
-            ))}
-             
-             </ScrollView>
+          {/* If there is a search query, show the filtered items only */}
+          {searchQuery ? (
+            filteredItems.map((pdfItem, index) => (
+              <TouchableOpacity key={index} onPress={() => handleTextClick(pdfItem.pdfUrl)}>
+                <Text style={styles.clickableText}>{pdfItem.title}</Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            /* Show the accordion structure when there is no search query */
+            accordionData.map((item, index) => (
+              <AccordionItem key={index} title={item.title}>
+                {item.nested.length !== 0 ? (
+                  <NestedAccordion nestedData={item.nested} itemsData={itemsData} />
+                ) : (
+                  <>
+                    {itemsData
+                      .filter((pdfItem) => pdfItem.heading === item.title) // Filter items based on the heading
+                      .map((pdfItem, index) => (
+                        <TouchableOpacity key={index} onPress={() => handleTextClick(pdfItem.pdfUrl)}>
+                          <Text style={styles.clickableText}>{pdfItem.title}</Text>
+                        </TouchableOpacity>
+                      ))}
+                  </>
+                )}
+              </AccordionItem>
+            ))
+          )}
+        </ScrollView>
+      </>
     );
 };
 
@@ -122,7 +148,7 @@ const styles = StyleSheet.create({
   },
     container: {
         flex: 1,
-        padding: 20,
+        padding: 10,
         backgroundColor: '#f0f4f8',
     },
     title: {
@@ -166,17 +192,26 @@ const styles = StyleSheet.create({
     content: {
         padding: 15,
         backgroundColor: '#ffffff',
-
+        gap:15
     },
     nestedText: {
         color: '#1976d2',
         fontSize: 16,
         textDecorationLine: 'underline',
+
     },
     clickableText: {
         color: '#1976d2',
         fontSize: 16,
         textDecorationLine: 'underline',
+    },
+    searchInput: {
+      height: 40,
+      borderColor: '#ccc',
+      borderWidth: 1,
+      paddingHorizontal: 8,
+      margin: 10,
+      borderRadius: 5,
     },
 });
 
