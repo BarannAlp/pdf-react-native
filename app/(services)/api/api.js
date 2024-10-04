@@ -4,7 +4,7 @@ import axios from "axios";
 export const registerUser = async (user) => {
   try {
     const response = await axios.post(
-      "http://pdf-node-seven.vercel.app/api/users/register",
+      "https://pdf-node-seven.vercel.app/api/users/register",
       user,
       {
         headers: {
@@ -57,7 +57,7 @@ export const loginUser = async (user) => {
 export const fetchPDF = async (filename) => {
   try {
       // Make a GET request to fetch the PDF file
-      const response = await axios.get(`http://pdf-node-seven.vercel.app/api/pdfDetails/files/${filename}`, {
+      const response = await axios.get(`https://pdf-node-seven.vercel.app/api/pdfDetails/files/${filename}`, {
           responseType: 'blob', // Important: Set the response type to 'blob'
       });
 
@@ -72,7 +72,7 @@ export const fetchPDF = async (filename) => {
 
 export const fetchItemsByHeading = async (heading) => {
   try {
-      const response = await axios.get(`http://pdf-node-seven.vercel.app/api/pdfDetails/getFilesByHeading/${heading}`, {
+      const response = await axios.get(`https://pdf-node-seven.vercel.app/api/pdfDetails/getFilesByHeading/${heading}`, {
       });
 
       return response.data;
@@ -86,7 +86,7 @@ export const fetchItemsByHeading = async (heading) => {
 
 export const fetchItems= async () => {
   try {
-      const response = await axios.get(`http://pdf-node-seven.vercel.app/api/pdfDetails/getFiles`, {
+      const response = await axios.get(`https://pdf-node-seven.vercel.app/api/pdfDetails/getFiles`, {
       });
 
       return response.data;

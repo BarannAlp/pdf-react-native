@@ -43,7 +43,7 @@ function AppWrapper() {
         },
       }}
     >
-     <Stack.Screen name="index" options={{ title: 'Giriş' }} />
+     <Stack.Screen name="index" options={{ title: 'Giriş',headerBackVisible:false }} />
      <Stack.Screen name="(tabs)" options={{ title: 'Yurt Çimento',headerBackVisible:false }}  />
      
       </Stack>
